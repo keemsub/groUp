@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 | groUp - 인증</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        .register-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-card h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #00bfa6;
+        }
+
+        .register-card label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .register-card input,
+        .register-card select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        .register-card select:focus,
+        .register-card input:focus {
+            outline: none;
+            border-color: #00bfa6;
+            background-color: #333;
+        }
+
+        .register-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .register-actions button {
+            text-align: center;
+            text-decoration: none;
+            background-color: #fff;
+            color: #121212;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+            border: 1px solid #fff;
+        }
+
+        .register-actions button:hover {
+            background-color: #e0e0e0;
+            color: #111;
+            opacity: 1;
+        }
+
+        /* 전화번호 입력과 인증 버튼 사이 여백 */
+        .phone-info {
+            margin-bottom: 20px;
+        }
+
+        /* 인증 코드 받기 버튼 */
+        #send-verification {
+            margin-bottom: 15px;
+        }
+
+        /* 인증 코드 입력 란 */
+        #verification-code-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        #timer {
+            font-size: 0.9rem;
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+
+        /* 통신사 셀렉트 버튼 스타일 */
+        .register-card select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #2c2c2c;
+            padding: 12px;
+            color: white;
+            border-radius: 8px;
+            border: 1px solid #444;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-wrapper">
+        <div class="register-card">
+            <h1>회원가입</h1>
+            
+            <!-- 1단계: 전화번호 인증 -->
+            <div class="phone-info">
+                <label for="carrier">통신사</label>
+                <select id="carrier" name="carrier" required>
+                    <option value="">통신사 선택</option>
+                    <option value="SKT">SKT</option>
+                    <option value="KT">KT</option>
+                    <option value="LGU+">LGU+</option>
+                </select>
+
+                <label for="phone">전화번호</label>
+                <input type="text" id="phone" name="phone" placeholder="전화번호" required>
+
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+
+                <label for="dob">생년월일</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <!-- 인증 버튼 -->
+                <button type="button" id="send-verification">인증 코드 받기</button>
+
+                <!-- 인증 코드 입력란과 타이머 -->
+                <div id="verification-code-container">
+                    <label for="verification-code">인증 코드</label>
+                    <input type="text" id="verification-code" name="verification-code" placeholder="인증 코드를 입력하세요" required>
+                    <div id="timer">남은 시간: 02:00</div>
+                    <button type="button" id="verify-code">인증 코드 확인</button>
+                </div>
+            </div>
+
+            <script>
+                let countdownTimer;
+                let remainingTime = 120;  // 2분 (120초)
+
+                // 인증 코드 받기 버튼 클릭 시
+                document.getElementById('send-verification').addEventListener('click', function() {
+                    // 인증 코드 받기 후 화면을 바꾸고 타이머 시작
+                    document.getElementById('verification-code-container').style.display = 'block';
+                    document.getElementById('send-verification').textContent = '인증 코드 다시 받기';
+                    
+                    // 타이머 시작
+                    startTimer();
+                });
+
+                // 인증 코드 확인 버튼 클릭 시
+                document.getElementById('verify-code').addEventListener('click', function() {
+                    // 인증 코드 확인 후, register.html로 이동
+                    window.location.href = '/register';
+                });
+
+                // 타이머 함수
+                function startTimer() {
+                    countdownTimer = setInterval(function() {
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+
+                        document.getElementById('timer').textContent = `남은 시간: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                        
+                        if (remainingTime <= 0) {
+                            clearInterval(countdownTimer);
+                            document.getElementById('timer').textContent = '시간 초과';
+                            document.getElementById('verify-code').disabled = true;
+                        }
+
+                        remainingTime--;
+                    }, 1000);
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>
