@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="app/templates")
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-app.get("/login", response_class=HTMLResponse)
+@app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
