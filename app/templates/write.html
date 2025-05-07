@@ -1,27 +1,84 @@
-<!-- templates/write.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <title>게시글 작성 | groUp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
-<body class="dark-background">
-  <header class="dashboard-header">
-    <h1>📄 게시글 작성</h1>
-  </header>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 40px;
+    }
 
-  <main class="dashboard-main">
-    <form class="form-box">
+    .form-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #1e1e1e;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #00bfa6;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 8px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background-color: #2c2c2c;
+      color: white;
+    }
+
+    textarea {
+      height: 200px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 12px;
+      background-color: #fff;
+      color: #111;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>게시글 작성</h1>
+    <form action="/write" method="post">
       <label for="title">제목</label>
-      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required />
+      <input type="text" id="title" name="title" required>
 
       <label for="content">내용</label>
-      <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요..." required></textarea>
+      <textarea id="content" name="content" required></textarea>
 
       <button type="submit">작성 완료</button>
     </form>
-  </main>
+  </div>
 </body>
 </html>

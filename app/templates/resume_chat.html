@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>GPT로 이력서 작성</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/chat.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <aside class="sidebar">
+      <h2>🎯 프롬프트 선택</h2>
+      <select id="prompt-selector">
+        <option value="default">일반</option>
+        <option value="resume">이력서 전문가</option>
+        <option value="translator">번역기 모드</option>
+      </select>
+    </aside>
+
+    <main class="chat-main">
+      <h1>GPT로 이력서 작성 ✍️</h1>
+      <div id="chat-box" class="chat-box"></div>
+
+      <div class="input-area">
+        <input id="user-input" placeholder="메시지를 입력하세요..." />
+        <label for="file-upload" class="icon-button" title="이력서 첨부">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </label>
+        <input type="file" id="file-upload" accept=".pdf,.doc,.docx" style="display: none" />
+        <button class="icon-button" id="send-btn" title="전송">
+          <svg viewBox="0 0 24 24">
+            <polygon points="2 22 23 12 2 2 2 11 17 12 2 13 2 22"/>
+          </svg>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', path='js/chat.js') }}"></script>
+</body>
+</html>

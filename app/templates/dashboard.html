@@ -12,7 +12,7 @@
     <ul class="nav-menu">
       <li><a href="#">내 정보</a></li>
       <li><a href="/write">게시글 작성</a></li>
-      <li><a href="#">이력서 무료 진단</a></li>
+      <li><a href="/resume_chat">이력서 3초만에 만들기</a></li>
       <li><a href="#">설정</a></li>
     </ul>
   </nav>
@@ -25,8 +25,18 @@
   <main class="dashboard-main">
     <section class="dashboard-card">
       <h2>📄 게시글 현황</h2>
-      <p>총 게시글: 12개</p>
-      <p>최근 작성: 2025.05.04</p>
+      {% if posts %}
+        <ul>
+          {% for post in posts %}
+            <li style="margin-bottom: 20px;">
+              <strong>{{ post.title }}</strong><br>
+              <small style="color: #aaa;">{{ post.content }}</small>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>아직 게시글이 없습니다.</p>
+      {% endif %}
     </section>
   </main>
 </body>

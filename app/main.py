@@ -1,33 +1,15 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+from app.api import pages, posts, chat
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
-@app.get("/", response_class=HTMLResponse)
-async def read_index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/login", response_class=HTMLResponse)
-async def login(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
-
-@app.get("/register", response_class=HTMLResponse)
-async def register(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
-
-@app.get("/phoneVrif", response_class=HTMLResponse)
-async def write_post(request: Request):
-    return templates.TemplateResponse("phoneVrif.html", {"request": request})
-
-@app.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
-
-@app.get("/write", response_class=HTMLResponse)
-async def write_post(request: Request):
-    return templates.TemplateResponse("write.html", {"request": request})
+# 라우터 등록
+app.include_router(pages.router)
+app.include_router(posts.router)
+app.include_router(chat.router)
